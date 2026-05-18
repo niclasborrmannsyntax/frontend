@@ -10,8 +10,8 @@
   --color-foreground: var(--foreground);
   --color-primary: #c3f53c;
   --color-secondary: #e1fa9d;
-  --color-bg-dark: #002c15;
-  --color-bg-light: #f2f5f7;
+  --color-background-dark: #002c15;
+  --color-background-light: #f2f5f7;
   --color-text-dark: #1e1e1e;
   --color-text-light: #ffffff;
   --font-sans: var(--font-geist-sans);
@@ -33,16 +33,19 @@ body {
 
 h1 {
   font-size: 64px;
+  line-height: 0.8;
   font-weight: 700;
 }
 
 h2 {
   font-size: 48px;
+  line-height: 1;
   font-weight: 700;
 }
 
 h3 {
   font-size: 32px;
+  line-height: 1;
   font-weight: 500;
 }
 

@@ -5,6 +5,7 @@ export const sections = {
       "Experience seamless, secure, and reliable payment solutions that simplify cross-border finance, allowing you to focus on what matters most.",
     cta: "Contact Sales",
     secondaryCta: "Create Account",
+    image: "/images/dashboard.png",
   },
   whyUs: {
     subtitle: "Why Choose Us",
