@@ -1,5 +1,5 @@
-import { sections } from "../content";
-import CustomButton from "./shared/CustomButton";
+import { sections } from "../../content";
+import CustomButton from "../shared/CustomButton";
 import Image from "next/image";
 
 export default function Hero() {
@@ -16,6 +16,7 @@ export default function Hero() {
         </div>
 
         <Image
+          loading="eager"
           className=" bottom-0 mx-auto left-0 right-0 pointer-events-none select-none"
           src={sections.hero.image}
           alt="Hero Image"

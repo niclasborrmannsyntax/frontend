@@ -163,6 +163,7 @@ export const faqItems = [
 ];
 
 export const pricing = {
+  buttonText: "Get Started",
   products: [
     {
       name: "Silver",
