@@ -1,16 +1,14 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import CustomButton from "../components/shared/CustomButton";
 import CustomTextField from "../components/shared/CustomTextField";
-import { getAuthRepository } from "../repositories";
+import { loginAction, signupAction } from "./actions";
 
 type AuthMode = "login" | "register";
 
 export default function AuthPage() {
   const router = useRouter();
-  const repo = getAuthRepository();
 
   const [mode, setMode] = useState<AuthMode>("login");
   const [name, setName] = useState("");
@@ -21,18 +19,42 @@ export default function AuthPage() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setMessage("");
-    if (mode === "login") {
-      const user = await repo.login({ email, password });
-      if (user) router.push("/dashboard");
-      else setMessage("Invalid email or password");
-    } else {
-      const user = await repo.register({ name, email, password });
-      if (user) router.push("/dashboard");
-      else
-        setMessage(
-          "Something went wrong during registration. Please try again with a different email.",
-        );
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    if (mode === "register") {
+      formData.append("name", name);
     }
+
+    const result =
+      mode === "login"
+        ? await loginAction(formData)
+        : await signupAction(formData);
+
+    if (result.ok) {
+      router.push("/dashboard");
+      return;
+    }
+
+    if (result.error === "missing_fields") {
+      setMessage("Please fill out all required fields.");
+      return;
+    }
+
+    if (result.error === "invalid_credentials") {
+      setMessage("Invalid email or password");
+      return;
+    }
+
+    if (result.error === "email_taken") {
+      setMessage("This email is already in use.");
+      return;
+    }
+
+    setMessage(
+      "Something went wrong during registration. Please try again with a different email.",
+    );
   };
 
   return (
@@ -86,6 +108,12 @@ export default function AuthPage() {
             </button>
           </div>
 
+          {message && (
+            <p className="rounded-xl bg-background-light px-4 py-3 text-sm text-text-dark">
+              {message}
+            </p>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "register" && (
               <CustomTextField
@@ -123,17 +151,12 @@ export default function AuthPage() {
               }
             />
 
-            {message && (
-              <p className="rounded-xl bg-background-light px-4 py-3 text-sm text-text-dark">
-                {message}
-              </p>
-            )}
-
-            <CustomButton
-              fullWidth
-              text={mode === "login" ? "Login to SecureSend" : "Create Account"}
-              onClick={() => undefined}
-            />
+            <button
+              type="submit"
+              className="w-full rounded-full bg-primary px-6 py-3 font-semibold text-text-dark transition-colors hover:bg-primary/90"
+            >
+              {mode === "login" ? "Login to SecureSend" : "Create Account"}
+            </button>
           </form>
         </section>
       </div>

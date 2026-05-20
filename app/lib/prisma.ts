@@ -1,23 +1,22 @@
 // lib/prisma.ts
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "../generated/prisma/client";
 
+// lib/prisma.ts
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient;
 };
 
-function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL;
 
-  if (!connectionString) {
-    throw new Error("DATABASE_URL is not set.");
-  }
-
-  return new PrismaClient({
-    adapter: new PrismaPg({ connectionString }),
-  });
+if (!databaseUrl) {
+  throw new Error(
+    "DATABASE_URL is not set. Please configure it before starting the app.",
+  );
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+const adapter = new PrismaPg(databaseUrl);
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

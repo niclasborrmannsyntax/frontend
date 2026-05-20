@@ -1,0 +1,73 @@
+"use server";
+
+import { getAuthRepository } from "../repositories";
+
+export type AuthActionResult =
+  | { ok: true }
+  | {
+      ok: false;
+      error:
+        | "missing_fields"
+        | "invalid_credentials"
+        | "email_taken"
+        | "signup_failed";
+    };
+
+function asNonEmptyString(value: FormDataEntryValue | null): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+export async function loginAction(
+  formData: FormData,
+): Promise<AuthActionResult> {
+  const email = asNonEmptyString(formData.get("email"));
+  const password = asNonEmptyString(formData.get("password"));
+
+  if (!email || !password) {
+    return { ok: false, error: "missing_fields" };
+  }
+
+  const authRepository = await getAuthRepository();
+  const user = await authRepository.login({ email, password });
+
+  if (!user) {
+    return { ok: false, error: "invalid_credentials" };
+  }
+
+  return { ok: true };
+}
+
+export async function signupAction(
+  formData: FormData,
+): Promise<AuthActionResult> {
+  const name = asNonEmptyString(formData.get("name"));
+  const email = asNonEmptyString(formData.get("email"));
+  const password = asNonEmptyString(formData.get("password"));
+
+  if (!email || !password) {
+    return { ok: false, error: "missing_fields" };
+  }
+
+  const authRepository = await getAuthRepository();
+
+  try {
+    await authRepository.register({
+      name: name || "New",
+      email,
+      password,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("Unique constraint")) {
+      return { ok: false, error: "email_taken" };
+    }
+
+    return { ok: false, error: "signup_failed" };
+  }
+
+  return { ok: true };
+}

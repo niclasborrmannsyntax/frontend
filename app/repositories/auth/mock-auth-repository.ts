@@ -1,7 +1,7 @@
 import { User } from "../../models/user";
 import { AuthRepository, LoginInput, RegisterInput } from "./auth-repository";
 
-const demoUser: User = {
+export const demoUser: User = {
   id: "user-123",
   name: "Demo User",
   email: "demo@securesend.app",

@@ -1,5 +1,6 @@
 import { transactionType } from "../models/transaction";
 import { getAccountRepository, getAuthRepository } from "../repositories";
+import { demoUser } from "../repositories/auth/mock-auth-repository";
 
 interface TransactionUiData {
   emoji: string;
@@ -8,12 +9,14 @@ interface TransactionUiData {
 
 export default async function DashboardPage() {
   const accountRepo = getAccountRepository();
-  const userRepo = getAuthRepository();
-  const user = await userRepo.getCurrentUser();
+  // const userRepo = getAuthRepository();
+  const user = demoUser;
   const bankingDetails = user
     ? await accountRepo.getBankingDetailsByUserId(user.id)
     : null;
-  const transactions = user ? await accountRepo.getTransactionsByUserId(user.id) : [];
+  const transactions = user
+    ? await accountRepo.getTransactionsByUserId(user.id)
+    : [];
   const balance = bankingDetails?.balance || 0;
 
   const generateTransactionEmoji = (
