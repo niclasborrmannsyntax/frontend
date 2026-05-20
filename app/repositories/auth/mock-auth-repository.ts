@@ -6,6 +6,7 @@ const demoUser: User = {
   name: "Demo User",
   email: "demo@securesend.app",
   avatarUrl: "https://i.pravatar.cc/150?img=1",
+  password: "password123",
 };
 
 const MOCK_USER_EMAIL = "demo@securesend.app";
@@ -30,6 +31,7 @@ export class MockAuthRepository implements AuthRepository {
       name: input.name,
       email: input.email,
       avatarUrl: "https://i.pravatar.cc/150?img=2",
+      password: input.password,
     });
   }
   getCurrentUser(): Promise<User | null> {

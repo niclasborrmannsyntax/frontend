@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   const bankingDetails = user
     ? await accountRepo.getBankingDetailsByUserId(user.id)
     : null;
-  const transactions = bankingDetails?.transactions || [];
+  const transactions = user ? await accountRepo.getTransactionsByUserId(user.id) : [];
   const balance = bankingDetails?.balance || 0;
 
   const generateTransactionEmoji = (

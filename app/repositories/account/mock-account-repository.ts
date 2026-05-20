@@ -8,26 +8,33 @@ const transactions: Transaction[] = [
     type: "deposit",
     senderId: "user-123",
     amount: 250,
-    timestamp: new Date("2024-06-01T10:00:00Z").toISOString(),
+    createdAt: new Date("2024-06-01T10:00:00Z"),
   },
   {
     id: "txn-2",
     type: "transfer",
     senderId: "user-123",
-    recieverId: "user-456",
+    receiverId: "user-456",
     amount: 200,
-    timestamp: new Date("2024-06-01T10:00:00Z").toISOString(),
+    createdAt: new Date("2024-06-01T10:00:00Z"),
   },
   {
     id: "txn-3",
     type: "withdraw",
     senderId: "user-123",
     amount: 50,
-    timestamp: new Date("2024-06-01T10:00:00Z").toISOString(),
+    createdAt: new Date("2024-06-01T10:00:00Z"),
   },
 ];
 
 export class MockAccountRepository implements AccountRepository {
+  getTransactionsByUserId(userId: string): Promise<Transaction[]> {
+    return Promise.resolve(
+      transactions.filter(
+        (txn) => txn.senderId === userId || txn.receiverId === userId,
+      ),
+    );
+  }
   getBankingDetailsByUserId(userId: string): Promise<BankingDetails | null> {
     return Promise.resolve({
       id: "banking-details-1",

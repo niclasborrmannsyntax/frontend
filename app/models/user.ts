@@ -4,6 +4,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  password: string;
   avatarUrl?: string;
 }
 
@@ -11,5 +12,4 @@ export interface BankingDetails {
   id: string; // PK
   userId: string; // FK
   balance: number;
-  transactions: Transaction[];
 }

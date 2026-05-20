@@ -5,6 +5,6 @@ export interface Transaction {
   type: transactionType;
   amount: number;
   senderId: string; // FK
-  recieverId?: string; // FK
-  timestamp: string; // ISO date string
+  receiverId?: string; // FK
+  createdAt: Date; // ISO date string
 }
