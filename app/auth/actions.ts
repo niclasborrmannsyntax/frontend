@@ -1,6 +1,6 @@
 "use server";
 
-import { getAuthRepository } from "../repositories";
+import { getAccountRepository, getAuthRepository } from "../repositories";
 
 export type AuthActionResult =
   | { ok: true }
@@ -54,6 +54,7 @@ export async function signupAction(
   }
 
   const authRepository = await getAuthRepository();
+  const accountRepository = getAccountRepository();
 
   try {
     await authRepository.register({

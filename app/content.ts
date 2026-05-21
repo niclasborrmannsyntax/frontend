@@ -1,3 +1,5 @@
+import { QuickSendCardProps } from "./dashboard/components/QuickSendCard";
+
 export const sections = {
   hero: {
     title: "Effortless Global Payments, Secured and Streamlined",
@@ -220,3 +222,27 @@ const colors = {
   textDark: "#1E1E1E",
   textLight: "#FFFFFF",
 };
+
+export const quickSendOptions: QuickSendCardProps[] = [
+  {
+    emoji: "⚡️",
+    title: "United Capital Money Market Fund",
+    description: "United Capital Money Market Fund",
+    annualReturns: 9.12,
+    color: "purple",
+  },
+  {
+    emoji: "🪢",
+    title: "Growth Gains & Wealth Habor Fund",
+    description: "Growth Gains & Wealth Habor Fund",
+    annualReturns: 11.23,
+    color: "blue",
+  },
+  {
+    emoji: "⭕️",
+    title: "Prosperity+Capitalclimb Portfolio",
+    description: "United Capital Money Market Fund",
+    annualReturns: 4.54,
+    color: "green",
+  },
+];
