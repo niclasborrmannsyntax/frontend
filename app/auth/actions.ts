@@ -3,7 +3,7 @@
 import { getAccountRepository, getAuthRepository } from "../repositories";
 
 export type AuthActionResult =
-  | { ok: true }
+  | { ok: true; userId: string }
   | {
       ok: false;
       error:
@@ -39,7 +39,7 @@ export async function loginAction(
     return { ok: false, error: "invalid_credentials" };
   }
 
-  return { ok: true };
+  return { ok: true, userId: user.id };
 }
 
 export async function signupAction(
@@ -57,18 +57,21 @@ export async function signupAction(
   const accountRepository = getAccountRepository();
 
   try {
-    await authRepository.register({
+    const user = await authRepository.register({
       name: name || "New",
       email,
       password,
     });
+    if (!user) {
+      return { ok: false, error: "signup_failed" };
+    }
+
+    await accountRepository.createBankingDetails(user.id);
+    return { ok: true, userId: user.id };
   } catch (error) {
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return { ok: false, error: "email_taken" };
     }
-
     return { ok: false, error: "signup_failed" };
   }
-
-  return { ok: true };
 }

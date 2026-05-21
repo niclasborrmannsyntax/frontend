@@ -25,7 +25,7 @@ model Transaction {
   type      String
   amount    Float
   senderId  String 
-  receiverId String
+  receiverId String? 
   createdAt DateTime @default(now())
 }
 

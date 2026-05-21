@@ -1,7 +1,7 @@
 export type transactionType = "withdraw" | "deposit" | "transfer";
 
 export interface Transaction {
-  id: string; // PK
+  id?: number; // PK
   type: transactionType;
   amount: number;
   senderId: string; // FK

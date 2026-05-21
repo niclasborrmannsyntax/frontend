@@ -1,5 +1,4 @@
-export default function BalanceCard() {
-  const balance = 1000.67;
+export default function BalanceCard({ balance }: { balance: number }) {
   return (
     <div className="flex-1 bg-[#10141a] rounded-2xl p-8 text-white relative min-w-[320px]">
       <div className="text-sm mb-2 text-gray-300">Available Balance</div>

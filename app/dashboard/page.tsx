@@ -1,5 +1,5 @@
 import { quickSendOptions } from "../content";
-import { getAccountRepository } from "../repositories";
+import { getAccountRepository, getAuthRepository } from "../repositories";
 import { demoUser } from "../repositories/auth/mock-auth-repository";
 import BalanceCard from "./components/BalanceCard";
 import DashboardTopBar from "./components/DashboardTopBar";
@@ -8,34 +8,41 @@ import Sidebar from "./components/Sidebar";
 import TransactionsList from "./components/TransactionsList";
 import VerificationBanner from "./components/VerificationBanner";
 
-export default async function DashboardPage() {
-  const accountRepo = getAccountRepository();
-  const user = demoUser;
-  const bankingDetails = user
-    ? await accountRepo.getBankingDetailsByUserId(user.id)
-    : null;
-  const transactions = user
-    ? await accountRepo.getTransactionsByUserId(user.id)
-    : [];
-  const balance = bankingDetails?.balance || 0;
+interface DashboardPageProps {
+  searchParams: Promise<{
+    userId?: string | string[];
+  }>;
+}
 
-  if (!user) {
+export default async function DashboardPage({
+  searchParams,
+}: DashboardPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const rawUserId = resolvedSearchParams?.userId;
+  const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId;
+
+  if (!userId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-        <p className="text-lg text-gray-700">
-          User not found in mock repository.
-        </p>
+      <div className="flex min-h-screen items-center justify-center bg-[#f7fafd]">
+        <p className="text-xl text-[#1a2b3c]">No user ID provided.</p>
       </div>
     );
   }
+
+  const accountRepo = getAccountRepository();
+  const authRepo = await getAuthRepository();
+  const user = (await authRepo.getCurrentUser(userId)) ?? demoUser;
+  const bankingDetails = await accountRepo.getBankingDetails(userId);
+  const transactions = await accountRepo.getTransactions(userId);
+  const balance = bankingDetails?.balance ?? 0;
 
   return (
     <div className="flex min-h-screen bg-[#f7fafd]">
       <Sidebar />
       <main className="flex-1 p-10">
-        <DashboardTopBar />
+        <DashboardTopBar userName={user.name} userId={userId} />
         <div className="flex flex-col md:flex-row gap-6 mb-8">
-          <BalanceCard />
+          <BalanceCard balance={balance} />
           <VerificationBanner />
         </div>
         <div className="flex flex-col md:flex-row gap-6 mb-8">
@@ -49,7 +56,7 @@ export default async function DashboardPage() {
               ))}
             </div>
           </div>
-          <TransactionsList transactions={transactions} user={user} />
+          <TransactionsList transactions={transactions} user={demoUser} />
         </div>
       </main>
     </div>

@@ -1,13 +1,30 @@
 "use client";
 
+import CustomButton from "@/app/components/shared/CustomButton";
+import { sendMoney } from "../actions";
 import { useState } from "react";
 
 type TransferType = "deposit" | "withdraw";
 
-export default function SendMoneyDialog() {
+interface SendMoneyDialogProps {
+  userId: string;
+}
+
+export default function SendMoneyDialog({ userId }: SendMoneyDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<TransferType>("deposit");
   const [amount, setAmount] = useState("");
+
+  const handleTransfer = async () => {
+    const parsedAmount = parseFloat(amount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      return;
+    }
+
+    await sendMoney(userId, type, parsedAmount);
+    setAmount("");
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -76,7 +93,7 @@ export default function SendMoneyDialog() {
                   className="w-full rounded-xl border border-gray-200 px-4 py-3 text-[#1a2b3c] outline-none transition focus:border-lime-400"
                 />
               </div>
-
+              <CustomButton text={"Transfer"} onClick={handleTransfer} />
               <div className="mt-6 h-10"></div>
             </div>
           </div>

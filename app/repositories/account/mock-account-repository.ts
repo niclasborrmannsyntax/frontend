@@ -28,19 +28,25 @@ const transactions: Transaction[] = [
 ];
 
 export class MockAccountRepository implements AccountRepository {
-  getTransactionsByUserId(userId: string): Promise<Transaction[]> {
-    return Promise.resolve(
-      transactions.filter(
-        (txn) => txn.senderId === userId || txn.receiverId === userId,
-      ),
-    );
+  createBankingDetails(userId: string): Promise<BankingDetails> {
+    throw new Error("Method not implemented.");
   }
-  getBankingDetailsByUserId(userId: string): Promise<BankingDetails | null> {
+  getBankingDetails(userId: string): Promise<BankingDetails | null> {
     return Promise.resolve({
       id: "banking-details-1",
       userId: userId,
       balance: 1000,
       transactions: transactions,
     });
+  }
+  createTransaction(transaction: Transaction): Promise<Transaction> {
+    throw new Error("Method not implemented.");
+  }
+  getTransactions(userId: string): Promise<Transaction[]> {
+    return Promise.resolve(
+      transactions.filter(
+        (txn) => txn.senderId === userId || txn.receiverId === userId,
+      ),
+    );
   }
 }

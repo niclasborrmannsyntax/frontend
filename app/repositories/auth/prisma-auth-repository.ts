@@ -45,7 +45,19 @@ export class PrismaAuthRepository implements AuthRepository {
     return user;
   }
 
-  getCurrentUser(): Promise<User | null> {
-    throw new Error("Method not implemented.");
+  async getCurrentUser(userId: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+      },
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
   }
 }

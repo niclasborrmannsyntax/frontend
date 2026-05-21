@@ -35,7 +35,7 @@ export default function AuthPage() {
         : await signupAction(formData);
 
     if (result.ok) {
-      router.push("/dashboard");
+      router.push(`/dashboard?userId=${result.userId}`);
       return;
     }
 
