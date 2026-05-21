@@ -31,11 +31,11 @@ export default function CustomButton({
 
   return (
     <button
-      className={`px-6 py-3 rounded-full font-semibold transition-colors cursor-pointer mx-auto ${
+      className={`px-6 py-3 rounded-full font-semibold transition-colors cursor-pointer ${
         fullWidth ? "w-full" : ""
       } ${
         variant === "primary"
-          ? "bg-primary  hover:bg-primary/90 text-text-dark"
+          ? "bg-primary hover:bg-primary/90 text-text-dark"
           : "border border-primary text-primary hover:bg-primary/10"
       }`}
       onClick={handleClick}

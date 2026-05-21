@@ -2,7 +2,11 @@ import { CustomSection } from "../shared/CustomSection";
 import PricingCard from "../shared/Pricing";
 const { pricing } = require("../../content").sections;
 
-export default function PricingSection() {
+export default function PricingSection({
+  onCtaClick,
+}: {
+  onCtaClick?: () => void;
+}) {
   return (
     <CustomSection
       subtitle={pricing.subtitle}
@@ -10,9 +14,9 @@ export default function PricingSection() {
       description={pricing.description}
     >
       <div className="flex flex-row justify-center gap-4">
-        <PricingCard id="Silver" />
-        <PricingCard id="Gold" />
-        <PricingCard id="Platinum" />
+        <PricingCard id="Silver" onCtaClick={onCtaClick} />
+        <PricingCard id="Gold" isHighlighted onCtaClick={onCtaClick} />
+        <PricingCard id="Platinum" onCtaClick={onCtaClick} />
       </div>
     </CustomSection>
   );

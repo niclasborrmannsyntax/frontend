@@ -15,7 +15,11 @@ export default function BenefitsGrid({
           <BenefitsCard key={id} id={id} />
         ))}
       </div>
-      {buttonText && <CustomButton text={buttonText} hasArrowIcon />}
+      {buttonText && (
+        <div className="flex justify-center">
+          <CustomButton text={buttonText} hasArrowIcon />
+        </div>
+      )}
     </div>
   );
 }

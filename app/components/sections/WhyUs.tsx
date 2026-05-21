@@ -3,13 +3,17 @@ import BenefitsGrid from "../shared/BenefitsGrid";
 import { CustomSection } from "../shared/CustomSection";
 const { whyUs } = require("../../content").sections;
 
-export default function WhyUsSection() {
+export default function WhyUsSection({
+  onCtaClick,
+}: {
+  onCtaClick?: () => void;
+}) {
   return (
     <CustomSection
       subtitle={whyUs.subtitle}
       title={whyUs.title}
       description={whyUs.description}
-      action={{ text: whyUs.cta }}
+      action={{ text: whyUs.cta, onClick: onCtaClick }}
     >
       <BenefitsGrid
         ids={[
