@@ -50,7 +50,6 @@ export class AuthRepositoryImpl implements AuthRepository {
           supabaseAuthId: data.user.id,
           name,
           email,
-          password,
           avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
         },
         select: {

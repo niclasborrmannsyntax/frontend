@@ -1,6 +1,9 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { getAccountRepository, getAuthRepository } from "../repositories";
+import { createClient } from "../utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export type AuthActionResult =
   | { ok: true; userId: string }
@@ -81,4 +84,11 @@ export async function signupAction(
     console.error("Signup error:", error);
     return { ok: false, error: "signup_failed" };
   }
+}
+
+export async function signOutAction(): Promise<void> {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  await supabase.auth.signOut();
+  redirect("/auth");
 }
