@@ -3,7 +3,7 @@ import { Transaction } from "../../models/transaction";
 import { BankingDetails, User } from "../../models/user";
 import { AccountRepository } from "./account-repository";
 
-export class PrismaAccountRepository implements AccountRepository {
+export class AccountRepositoryImpl implements AccountRepository {
   editAccountBalance(
     userId: string,
     amount: number,

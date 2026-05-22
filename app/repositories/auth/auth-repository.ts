@@ -14,5 +14,5 @@ export interface RegisterInput {
 export interface AuthRepository {
   login(input: LoginInput): Promise<User | null>;
   register(input: RegisterInput): Promise<User | null>;
-  getCurrentUser(userId: string): Promise<User | null>;
+  getCurrentUser(supabaseAuthId: string): Promise<User | null>;
 }

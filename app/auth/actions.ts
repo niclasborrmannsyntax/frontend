@@ -25,21 +25,26 @@ function asNonEmptyString(value: FormDataEntryValue | null): string | null {
 export async function loginAction(
   formData: FormData,
 ): Promise<AuthActionResult> {
-  const email = asNonEmptyString(formData.get("email"));
-  const password = asNonEmptyString(formData.get("password"));
+  try {
+    const email = asNonEmptyString(formData.get("email"));
+    const password = asNonEmptyString(formData.get("password"));
 
-  if (!email || !password) {
-    return { ok: false, error: "missing_fields" };
-  }
+    if (!email || !password) {
+      return { ok: false, error: "missing_fields" };
+    }
 
-  const authRepository = await getAuthRepository();
-  const user = await authRepository.login({ email, password });
+    const authRepository = await getAuthRepository();
+    const user = await authRepository.login({ email, password });
 
-  if (!user) {
+    if (!user) {
+      return { ok: false, error: "invalid_credentials" };
+    }
+
+    return { ok: true, userId: user.id };
+  } catch (error) {
+    console.error("Login error:", error);
     return { ok: false, error: "invalid_credentials" };
   }
-
-  return { ok: true, userId: user.id };
 }
 
 export async function signupAction(
@@ -72,6 +77,8 @@ export async function signupAction(
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return { ok: false, error: "email_taken" };
     }
+
+    console.error("Signup error:", error);
     return { ok: false, error: "signup_failed" };
   }
 }

@@ -1,37 +1,34 @@
+import { cookies } from "next/headers";
 import { quickSendOptions } from "../content";
 import { getAccountRepository, getAuthRepository } from "../repositories";
-import { demoUser } from "../repositories/auth/mock-auth-repository";
 import BalanceCard from "./components/BalanceCard";
 import DashboardTopBar from "./components/DashboardTopBar";
 import QuickSendCard from "./components/QuickSendCard";
 import Sidebar from "./components/Sidebar";
 import TransactionsList from "./components/TransactionsList";
 import VerificationBanner from "./components/VerificationBanner";
+import { createClient } from "../utils/supabase/server";
+import { redirect } from "next/navigation";
 
-interface DashboardPageProps {
-  searchParams: Promise<{
-    userId?: string | string[];
-  }>;
-}
-
-export default async function DashboardPage({
-  searchParams,
-}: DashboardPageProps) {
-  const resolvedSearchParams = await searchParams;
-  const rawUserId = resolvedSearchParams?.userId;
-  const userId = Array.isArray(rawUserId) ? rawUserId[0] : rawUserId;
-
-  if (!userId) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f7fafd]">
-        <p className="text-xl text-[#1a2b3c]">No user ID provided.</p>
-      </div>
-    );
-  }
-
+export default async function DashboardPage() {
   const accountRepo = getAccountRepository();
   const authRepo = await getAuthRepository();
-  const user = (await authRepo.getCurrentUser(userId)) ?? demoUser;
+
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const currentUser = await supabase.auth.getUser();
+  if (!currentUser.data.user) {
+    redirect("/auth");
+  }
+  const supabaseAuthId = currentUser.data.user.id;
+
+  const user = await authRepo.getCurrentUser(supabaseAuthId);
+  if (!user) {
+    redirect("/auth");
+  }
+
+  const userId = user.id;
   const bankingDetails = await accountRepo.getBankingDetails(userId);
   const transactions = await accountRepo.getTransactions(userId);
   const balance = bankingDetails?.balance ?? 0;
@@ -56,7 +53,7 @@ export default async function DashboardPage({
               ))}
             </div>
           </div>
-          <TransactionsList transactions={transactions} user={demoUser} />
+          <TransactionsList transactions={transactions} user={user} />
         </div>
       </main>
     </div>

@@ -4,14 +4,14 @@ import { AccountRepository } from "./account-repository";
 
 const transactions: Transaction[] = [
   {
-    id: "txn-1",
+    id: 1,
     type: "deposit",
     senderId: "user-123",
     amount: 250,
     createdAt: new Date("2024-06-01T10:00:00Z"),
   },
   {
-    id: "txn-2",
+    id: 2,
     type: "transfer",
     senderId: "user-123",
     receiverId: "user-456",
@@ -19,7 +19,7 @@ const transactions: Transaction[] = [
     createdAt: new Date("2024-06-01T10:00:00Z"),
   },
   {
-    id: "txn-3",
+    id: 3,
     type: "withdraw",
     senderId: "user-123",
     amount: 50,
@@ -27,7 +27,14 @@ const transactions: Transaction[] = [
   },
 ];
 
-export class MockAccountRepository implements AccountRepository {
+export class AccountRepositoryMock implements AccountRepository {
+  editAccountBalance(
+    userId: string,
+    amount: number,
+    withdraw: boolean,
+  ): Promise<BankingDetails> {
+    throw new Error("Method not implemented.");
+  }
   createBankingDetails(userId: string): Promise<BankingDetails> {
     throw new Error("Method not implemented.");
   }
